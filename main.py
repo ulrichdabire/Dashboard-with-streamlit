@@ -1,16 +1,15 @@
 import streamlit as st
 #import uvicorn
-import time
+#import time
 import requests
 import pandas as pd
-#import plotly
 import plotly.express as px
 #import plotly.graph_objects as go
-#import numpy as np
+
 
 
 st.set_page_config(
-    page_title="Real-Time Data Science Dashboard",
+    page_title="DABIRE Dashboard",
     page_icon="✅",
     layout="wide",
 )
