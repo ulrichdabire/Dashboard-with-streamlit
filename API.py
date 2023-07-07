@@ -9,8 +9,8 @@ clics = pd.read_csv("./clics.csv")
 impressions = pd.read_csv("./impressions.csv")
 achats = pd.read_csv("./achats.csv")
 
-merged_data = pd.merge(clics, impressions, on="cookie_id")
-merged_data = pd.merge(merged_data, achats, on="cookie_id")
+merged_data = pd.merge(impressions, clics, on="cookie_id", how="left")
+merged_data = pd.merge(merged_data, achats, on="cookie_id", how="left")
 
 
 @app.get("/dabireapi/data")
