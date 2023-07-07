@@ -1,5 +1,5 @@
 import streamlit as st
-import uvicorn
+#import uvicorn
 import time
 import requests
 import pandas as pd
