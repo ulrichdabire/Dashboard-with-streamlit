@@ -7,16 +7,15 @@ import requests
 import plotly.express as px
 import plotly.graph_objects as go
 
-
-impressions_df = pd.read_csv('impressions.csv')
-clics_df = pd.read_csv('clics.csv')
-achats_df = pd.read_csv('achats.csv')
+#Importations des données
+impressions = pd.read_csv('impressions.csv')
+clics = pd.read_csv('clics.csv')
+achats = pd.read_csv('achats.csv')
 
 ### Fusion des données
 
-donnees_fusionnees = pd.merge(impressions_df, clics_df, on='cookie_id')
-donnees = pd.merge(donnees_fusionnees, achats_df, on='cookie_id')
-
+donneesf = pd.merge(impressions, clics, on='cookie_id')
+donnees = pd.merge(donneesf, achats, on='cookie_id')
 
 
 #Route API pour avoir les données
@@ -26,8 +25,7 @@ def get_donnees():
     return jsonify(donnees)
 
 
-
-
+# Configuration du Titre du dashbord
 st.set_page_config(
     page_title="DABIRE Dashboard",
     page_icon="✅",
@@ -36,16 +34,7 @@ st.set_page_config(
 
 df = pd.DataFrame(donnees)
 
-#url_api = "http://localhost:8000/dabireapi/data"
-
-# Fonction pour appeler l'API et obtenir les données
-#def get_data_from_api():
-    #response = requests.get(url_api)
-    #return pd.DataFrame(response.json())
-
 if st.button('Obtenir les données'):
-    # Appeler la fonction pour obtenir les données de l'API
-    #df = get_data_from_api()
     df = pd.DataFrame(donnees)
 
 #Titre du dashboard
