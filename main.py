@@ -5,7 +5,7 @@ from flask import Flask, jsonify
 import numpy as np
 import requests
 import plotly.express as px
-import plotly.graph_objects as go
+#import plotly.graph_objects as go
 
 #Importations des données
 impressions = pd.read_csv('impressions.csv')
