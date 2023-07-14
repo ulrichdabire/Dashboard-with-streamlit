@@ -1,30 +1,30 @@
+
 import streamlit as st
-#import uvicorn
-#import time
+import pandas as pd
+from flask import Flask, jsonify
+import numpy as np
 import requests
-import pandas as pd
 import plotly.express as px
-#import plotly.graph_objects as go
+import plotly.graph_objects as go
 
 
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-import pandas as pd
+impressions_df = pd.read_csv('impressions.csv')
+clics_df = pd.read_csv('clics.csv')
+achats_df = pd.read_csv('achats.csv')
 
-app = FastAPI()
+### Fusion des données
 
-# Charger les données et les fusionner
-clics = pd.read_csv("./clics.csv")
-impressions = pd.read_csv("./impressions.csv")
-achats = pd.read_csv("./achats.csv")
-
-merged_data = pd.merge(impressions, clics, on="cookie_id", how="left")
-merged_data = pd.merge(merged_data, achats, on="cookie_id", how="left")
+donnees_fusionnees = pd.merge(impressions_df, clics_df, on='cookie_id')
+donnees = pd.merge(donnees_fusionnees, achats_df, on='cookie_id')
 
 
-@app.get("/dabireapi/data")
-async def get_data():
-    return JSONResponse(content=merged_data.to_dict(orient="records")) # Retourne les données au format JSON
+
+#Route API pour avoir les données
+app = Flask(__name__)
+@app.route("/dabireapi/data")
+def get_donnees():
+    return jsonify(donnees)
+
 
 
 
@@ -34,18 +34,19 @@ st.set_page_config(
     layout="wide",
 )
 
-df = None
+df = pd.DataFrame(donnees)
 
-url_api = "http://localhost:8000/dabireapi/data"
+#url_api = "http://localhost:8000/dabireapi/data"
 
 # Fonction pour appeler l'API et obtenir les données
-def get_data_from_api():
-    response = requests.get(url_api)
-    return pd.DataFrame(response.json())
+#def get_data_from_api():
+    #response = requests.get(url_api)
+    #return pd.DataFrame(response.json())
 
 if st.button('Obtenir les données'):
     # Appeler la fonction pour obtenir les données de l'API
-    df = get_data_from_api()
+    #df = get_data_from_api()
+    df = pd.DataFrame(donnees)
 
 #Titre du dashboard
 st.title("TP : Creation d'un dashborad avec Streamlit")
@@ -58,7 +59,7 @@ if df is not None:
     with st.sidebar:
         st.write("Les filtres")
         age = st.slider('Choose a value:', min_value=19.0, max_value=69.0, value=(19.0, 69.0))
-        campaign = st.multiselect('Campaign ID:', options=np.unique(fusion['campaign_id']))
+        campaign = st.multiselect('Campaign ID:', options=np.unique(df['campaign_id']))
 
 
     identifian_filter = st.selectbox("Selectionner une campagne", pd.unique(df["campaign_id"]))
