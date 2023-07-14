@@ -54,13 +54,6 @@ st.title("TP : Creation d'un dashborad avec Streamlit")
 if df is not None:
     #Les filtres en début
     #age_filter = st.selectbox("Selection des âges", pd.unique(df["age"]))
-    # Création des filtres
-
-    with st.sidebar:
-        st.write("Les filtres")
-        age = st.slider('Choose a value:', min_value=19.0, max_value=69.0, value=(19.0, 69.0))
-        campaign = st.multiselect('Campaign ID:', options=np.unique(df['campaign_id']))
-
 
     identifian_filter = st.selectbox("Selectionner une campagne", pd.unique(df["campaign_id"]))
 
