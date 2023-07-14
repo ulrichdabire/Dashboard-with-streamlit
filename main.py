@@ -7,6 +7,26 @@ import plotly.express as px
 #import plotly.graph_objects as go
 
 
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+import pandas as pd
+
+app = FastAPI()
+
+# Charger les données et les fusionner
+clics = pd.read_csv("./clics.csv")
+impressions = pd.read_csv("./impressions.csv")
+achats = pd.read_csv("./achats.csv")
+
+merged_data = pd.merge(impressions, clics, on="cookie_id", how="left")
+merged_data = pd.merge(merged_data, achats, on="cookie_id", how="left")
+
+
+@app.get("/dabireapi/data")
+async def get_data():
+    return JSONResponse(content=merged_data.to_dict(orient="records")) # Retourne les données au format JSON
+
+
 
 st.set_page_config(
     page_title="DABIRE Dashboard",
@@ -33,6 +53,14 @@ st.title("TP : Creation d'un dashborad avec Streamlit")
 if df is not None:
     #Les filtres en début
     #age_filter = st.selectbox("Selection des âges", pd.unique(df["age"]))
+    # Création des filtres
+
+    with st.sidebar:
+        st.write("Les filtres")
+        age = st.slider('Choose a value:', min_value=19.0, max_value=69.0, value=(19.0, 69.0))
+        campaign = st.multiselect('Campaign ID:', options=np.unique(fusion['campaign_id']))
+
+
     identifian_filter = st.selectbox("Selectionner une campagne", pd.unique(df["campaign_id"]))
 
     # Application du filtre à la base de données
